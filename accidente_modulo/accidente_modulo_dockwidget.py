@@ -66,7 +66,9 @@ class AccidenteDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         self.btn_cargacapa.clicked.connect(self.cargar_capa)
         #a partir de aqui importo processing
         self.btn_analisis.clicked.connect(self.capa_analisis)
-        
+   
+
+   
     def actualizar(self):
         global lista_capas
         capas=QgsProject.instance().mapLayers().values()
@@ -74,10 +76,7 @@ class AccidenteDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         lista_capas=[capa.name() for capa in capas]
         self.cmb_capas.clear()
         self.cmb_capas.addItems(lista_capas)   
-        
-
-
-        
+                
     def cargar_fichero(self,event):
         ruta=str(self.qfw_selector.filePath())#ruta seleccionada       
         #abro el archivo para leer y lo manejo con alias leer_csv:
@@ -111,8 +110,8 @@ class AccidenteDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
         vlayer = QgsVectorLayer('Point?crs=EPSG:25830', 'Accidentes en Ciudad', 'memory')
         #proveedor de la capa 
         provider = vlayer.dataProvider()
-        #añado atributos tipo string 
-        provider.addAttributes([QgsField('Codigo_Distrito', QVariant.String),QgsField('Nombre_Distrito', QVariant.String)])
+        #añado los campos tipo string
+        provider.addAttributes([QgsField('Cod_Distrito', QVariant.String),QgsField('Nombre_Distrito', QVariant.String),QgsField('Tipo_accidente', QVariant.String),QgsField('Tipo_vehiculo', QVariant.String),QgsField('alcohol', QVariant.String)])
         #actualizo los campos de la capa
         vlayer.updateFields()
     
@@ -122,36 +121,62 @@ class AccidenteDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
           #con propiedades de geometría con las coordenadas indicadas
           f.setGeometry(QgsGeometry.fromPointXY(QgsPointXY(float(self.qtw_tabla.item(fila,2).text()),float(self.qtw_tabla.item(fila,3).text()))))
           #añado atributos
-          f.setAttributes([self.qtw_tabla.item(fila,0).text(), self.qtw_tabla.item(fila,1).text()])
+          f.setAttributes([self.qtw_tabla.item(fila,0).text(), self.qtw_tabla.item(fila,1).text(), self.qtw_tabla.item(fila,4).text(), self.qtw_tabla.item(fila,5).text(), self.qtw_tabla.item(fila,6).text()])
           #añado al proveedor el registro creado
           provider.addFeature(f)
-          #actualizo la capa
+          #actualizo la capa         
           vlayer.updateExtents()
         #Añado la capa al proyecto actual
         QgsProject.instance().addMapLayer(vlayer)
+        #vlayer.setOpacity(0.1)
+        
+        #rutas relativas
+        #En el directorio raiz del plugin me creo las carpetas templates(estilos) y salida(ficheros creados)
+        thisFilePath = os.path.dirname(os.path.realpath(__file__))
+        self.templatePath = thisFilePath 
+        
+        rutaESTILO1=self.templatePath+'//templates/estilo1.qml'
         #guardo la capa en una ruta para poder llamarla desde proccesing
-        QgsVectorFileWriter.writeAsVectorFormat(vlayer,'D:/accidente/capa/accidentes.shp',"utf-8",vlayer.crs(),"ESRI Shapefile")
-
+        thisFilePath = os.path.dirname(os.path.realpath(__file__))
+        self.templatePath = thisFilePath 
+                
+        rutaSHAPEfile=self.templatePath+'//salida/accidentes.shp'  
+        #cargo estilo y escribo fichero        
+        QgsVectorFileWriter.writeAsVectorFormat(vlayer,rutaSHAPEfile,"utf-8",vlayer.crs(),"ESRI Shapefile")
+        vlayer.loadNamedStyle(rutaESTILO1) 
 
     def cargar_capa(self,event):
         ruta=str(self.qfw_selectorcapa.filePath())     
         #creo una capa a partir del fichero que indico en la ruta 
         layer = QgsVectorLayer(ruta,"distritos")
         #Añado la capa al proyecto actual
-        QgsProject.instance().addMapLayer(layer)
+        QgsProject.instance().addMapLayer(layer)        
+        layer.setOpacity(0.5)              
+        
+        thisFilePath = os.path.dirname(os.path.realpath(__file__))
+        self.templatePath = thisFilePath
+
+        rutaESTILO2=self.templatePath+'//templates/estilo2.qml'
         #guardo la capa en una ruta para poder llamarla desde proccesing
-        QgsVectorFileWriter.writeAsVectorFormat(layer,'D:/accidente/capa/distritos.shp',"utf-8",layer.crs(),"ESRI Shapefile")
- 
-
-
+        rutaSHAPEfile=self.templatePath+'//salida/distritos.shp'
+        #cargo estilo y escribo fichero
+        layer.loadNamedStyle(rutaESTILO2) 
+        QgsVectorFileWriter.writeAsVectorFormat(layer,rutaSHAPEfile,"utf-8",layer.crs(),"ESRI Shapefile")
+        
     def capa_analisis(self,event):       
 
+       thisFilePath = os.path.dirname(os.path.realpath(__file__))
+       self.templatePath = thisFilePath
+
+       #ruta del fichero estilo
+       rutaESTILO=self.templatePath+'\\templates\estilo.qml'
        #ruta de la capa de polígonos
-       layer='D:/accidente/capa/distritos.shp'
+       layer=self.templatePath+'//salida/distritos.shp'                    
        #ruta de la capa de puntos
-       layerP = 'D:/accidente/capa/accidentes.shp'
+       layerP = self.templatePath+'//salida/accidentes.shp'       
        #ruta del fichero de salida
-       fileOutput='D:/accidente/capa/accidentesDistritoContar.shp'
+       fileOutput=self.templatePath+'//salida/accidentesDistritoContar.shp'
+       
        #geoproceso nativo de QGIS: "Contar puntos en polígono"
        processing.run("qgis:countpointsinpolygon", {'POLYGONS': layer,'POINTS': layerP,'OUTPUT': fileOutput})
        #creo una capa a partir del fichero creado en el geoproceso
@@ -159,8 +184,9 @@ class AccidenteDockWidget(QtWidgets.QDockWidget, FORM_CLASS):
        #Añado la capa al proyecto actual
        QgsProject.instance().addMapLayer(lyrcountpointsinpolygon)        
        #Añado el estilo de una leyenda guardada en una ruta
-       lyrcountpointsinpolygon.loadNamedStyle('D:/accidente/estilo.qml') 
-       
+       lyrcountpointsinpolygon.loadNamedStyle(rutaESTILO) 
+       lyrcountpointsinpolygon.setOpacity(0.5)
+       lyrcountpointsinpolygon.updateExtents()
      
     def closeEvent(self, event):
         self.closingPlugin.emit()

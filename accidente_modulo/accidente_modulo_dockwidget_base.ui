@@ -24,8 +24,83 @@
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="1" column="0">
-      <widget class="QgsFileWidget" name="qfw_selector"/>
+     <item row="2" column="0">
+      <widget class="QPushButton" name="btn_cargar">
+       <property name="text">
+        <string>Cargar</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0">
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QPushButton" name="btn_actualizar">
+             <property name="text">
+              <string>Actualizar capas</string>
+             </property>
+            </widget>
+           </item>
+           <item alignment="Qt::AlignRight">
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>capas</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="cmb_capas"/>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item row="4" column="0">
+      <widget class="QPushButton" name="btn_crearcapa">
+       <property name="text">
+        <string>Crear capa</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Tabla de accidentes</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QPushButton" name="btn_analisis">
+       <property name="text">
+        <string>Contar accidentes por distrito</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Buscar shape Provincias</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QgsFileWidget" name="qfw_selectorcapa"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_cargacapa">
+         <property name="text">
+          <string>Cargar capa al mapa</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item row="3" column="0">
       <widget class="QTableWidget" name="qtw_tabla">
@@ -66,90 +141,8 @@
        </column>
       </widget>
      </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Tabla de accidentes</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="0">
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QLabel" name="label_3">
-         <property name="text">
-          <string>Buscar shape Provincias</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QgsFileWidget" name="qfw_selectorcapa"/>
-       </item>
-       <item>
-        <widget class="QPushButton" name="btn_cargacapa">
-         <property name="text">
-          <string>Cargar capa al mapa</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="7" column="0">
-      <widget class="QPushButton" name="btn_leyenda">
-       <property name="text">
-        <string>Acerca de...</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="0">
-      <widget class="QPushButton" name="btn_analisis">
-       <property name="text">
-        <string>Contar accidentes por distrito</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QPushButton" name="btn_cargar">
-       <property name="text">
-        <string>Cargar</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QPushButton" name="btn_crearcapa">
-       <property name="text">
-        <string>Crear capa</string>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="0">
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout">
-           <item>
-            <widget class="QPushButton" name="btn_actualizar">
-             <property name="text">
-              <string>Actualizar capas</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="label_2">
-             <property name="text">
-              <string>capas</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QComboBox" name="cmb_capas"/>
-           </item>
-          </layout>
-         </item>
-        </layout>
-       </item>
-      </layout>
+     <item row="1" column="0">
+      <widget class="QgsFileWidget" name="qfw_selector"/>
      </item>
     </layout>
    </widget>
