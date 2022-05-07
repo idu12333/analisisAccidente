@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/plugins/accidente_modulo" >
-        <file>icon.png</file>
-    </qresource>
-</RCC>
